@@ -55,7 +55,7 @@ type APIResponse struct {
 	} `json:"items"`
 }
 
-// IsHoliday は当日が祝日かどうかを判定するAPI
+// IsHoliday は当日が祝日または祝日扱いかどうかを判定するAPI
 func IsHoliday(c *gin.Context) {
 
 	timeNow := time.Now()
@@ -95,7 +95,32 @@ func IsHoliday(c *gin.Context) {
 	json.Unmarshal(data, &response)
 
 	for _, item := range response.Items {
+		// 祝日の場合はtrueを返す
 		if item.Start.Date == timeNow.Format(time.DateOnly) {
+			c.JSON(200, gin.H{
+				"date":    timeNow.Format(time.DateOnly),
+				"holiday": true,
+			})
+			return
+		}
+	}
+
+	// 祝日でない場合でも特定日の場合は祝日と扱い、trueを返す
+	specialDay := []struct {
+		Month int
+		Day   int
+	}{
+		// 中部電力のスマートライフプランにて休日料金として扱われる日
+		{1, 2},   // 1月2日
+		{1, 3},   // 1月3日
+		{4, 30},  // 4月30日
+		{5, 1},   // 5月1日
+		{5, 2},   // 5月2日
+		{12, 30}, // 12月30日
+		{12, 31}, // 12月31日
+	}
+	for _, day := range specialDay {
+		if timeNow.Month() == time.Month(day.Month) && timeNow.Day() == day.Day {
 			c.JSON(200, gin.H{
 				"date":    timeNow.Format(time.DateOnly),
 				"holiday": true,
