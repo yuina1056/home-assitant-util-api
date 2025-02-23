@@ -1,0 +1,11 @@
+version: "3"
+services:
+  homeassitant-util-api:
+    container_name: homeassitant-util-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
