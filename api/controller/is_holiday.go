@@ -59,7 +59,6 @@ type APIResponse struct {
 func IsHoliday(c *gin.Context) {
 
 	timeNow := time.Now()
-	timeNow = time.Date(timeNow.Year(), timeNow.Month(), 24, 0, 0, 0, 0, timeNow.Location())
 
 	url, _ := url.Parse(os.Getenv("HOLIDAY_API_URL"))
 	url.Path = path.Join("calendar", "v3", "calendars", os.Getenv("HOLIDAY_GOOGLE_API_CALENDAR_ID"), "events")
