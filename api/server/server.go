@@ -10,6 +10,7 @@ func Handler(port string) {
 	r := gin.Default()
 
 	r.GET("/isholiday", controller.IsHoliday)
+	r.GET("/isholidayrate", controller.IsHolidayRate)
 
 	r.Run(":" + port)
 }
