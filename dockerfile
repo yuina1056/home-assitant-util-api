@@ -18,6 +18,8 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
+ENV TZ Asia/Tokyo
+
 COPY --from=builder /app/main .
 
 CMD ["./main"]
